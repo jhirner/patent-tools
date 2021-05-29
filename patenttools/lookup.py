@@ -1,3 +1,6 @@
+# A set of tools for retrieving US patent information.
+# The tools are available to instances of the USPTOLookup class.
+
 # Import necessary modules
 import re
 import requests
@@ -26,6 +29,10 @@ class USPTOLookup:
         
         # Pass to a cleaner function to remove letters, punctiuation
         self.number = self.clean_num(patent_num)
+        
+        # If the patent number could not be interpreted, quit.
+        if self.clean_num == "unrecognized input":
+            quit()
         
         # Assemble the query URL & access the patent.
         url_template = """http://patft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1
@@ -89,6 +96,14 @@ class USPTOLookup:
         cleaned_num = re.sub(r"[a-zA-Z]+[0-9]*", "", cleaned_num)
         cleaned_num = re.sub(r"[,.\\\!\?-]*", "", cleaned_num)
         cleaned_num = re.sub(r"\s+", "", cleaned_num)
+        
+        # Test to confirm that the user's patent number could be interpreted.
+        try:
+            int(cleaned_num) 
+            return str(cleaned_num)
+        except ValueError:
+            return "unrecognized input"
+            
         return str(cleaned_num)
     
     

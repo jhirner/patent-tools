@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <title>
+            PatentTools: Results
+        </title>
+        <style>
+            .result-table {font-family: Arial, Helvetica, sans-serif;
+                border-collapse: collapse;}
+            .result-table tr:nth-child(even) {background-color: #F5F5F5;}
+            .result-table tr:nth-child(odd) {background-color: #D0D0D0}
+            .result-table td {padding: 10px;}
+            
+            .result-table-header {font-weight: bold;}
+            .table-header-footnote {font-weight: normal;
+                font-size: 75%;
+                font-style: italic}
+            .result-table-data {font-weight: normal;}
+            
+            .claims-list {padding-left: 25px;
+                text-indent: -25px;
+                margin-bottom: 1em;
+                }
+            
+            h1 {font-family: Arial, Helvetica, sans-serif;}
+            h2 {font-family: Arial, Helvetica, sans-serif;}
+            span {font-family: Arial, Helvetica, sans-serif;}
+            
+        </style>
+    </head>
+    <body>
+        <h1>PatentTools</h1>
+        <h2>Results for US Patent #{{pat_num}}.</h2><p>
+        <table border = 1 class="result-table">
+            <tr>
+                <td valign = "top" class = "result-table-header">
+                    Title
+                </td>
+                <td valign = "top" class = "pat_data">
+                    <a href = {{pat_url}}>{{pat_title}}</a>
+                </td>
+            </tr>
+            <tr>
+                <td valign = "top" class = "result-table-header">
+                    Assignee
+                </td>
+                <td valign = "top" class = "pat_data">
+                    {{pat_assignee}}
+                </td>
+            </tr>
+            <tr>
+                <td valign = "top" class = "result-table-header">
+                    Filing Date
+                </td>
+                <td valign = "top" class = "pat_data">
+                    {{pat_file_date}}
+                </td>
+            </tr>
+            <tr>
+                <td valign = "top" class = "result-table-header">
+                    Claims
+                </td>
+                <td valign = "top" class = "pat_data">       
+                    {% for claim in pat_claims: %}
+                    <div class = "claims-list">
+                        {{claim}}
+                    </div>
+                    {% endfor %}
+                </td>
+            </tr>
+        </table><p>
+        <span><a href="/">Look up another patent.</a></span>
+    </body>
+</html>
+        

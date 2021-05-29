@@ -1,3 +1,7 @@
+# A set of tools for extracting simple, summary-type features
+# from a corpus.
+# The tools are available for instances of the TextDistiller class.
+
 # Import necessary modules
 import re
 from nltk.tokenize import word_tokenize, sent_tokenize
