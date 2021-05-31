@@ -4,21 +4,73 @@
             PatentTools: Search
         </title>
         <style>        
-            h1 {font-family: Arial, Helvetica, sans-serif;}
-            h2 {font-family: Arial, Helvetica, sans-serif;}
-            span {font-family: Arial, Helvetica, sans-serif;}
+            body {font-family: Arial, Helvetica, sans-serif;
+                background: #AAAAAA}
+            
+            #main-container {
+                background: #EEEEEE;
+                border: 5px solid black;
+                box-shadow: 10px 10px 5px #777777;
+                max-width: 600px;
+                min-width: 360px;
+                padding: 25px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                -moz-transform: translateX(-50%) translateY(-50%);
+                -webkit-transform: translateX(-50%) translateY(-50%);
+                transform: translateX(-50%) translateY(-50%);}
+
+            .search-table {font-family: Arial, Helvetica, sans-serif;
+                width: 100%}
+            .search-table td {padding: 10px;}
+            .search-table tr td {border: 0px solid black}
+            
+            input[type=submit]{
+                background-color: midnightblue;
+                border: none;
+                color: white;
+                padding: 16px 32px;
+                text-decoration: none;
+                margin: 4px 2px;
+                cursor: pointer;
+                border-radius: 10px;
+                width: 100%}
         </style>
     </head>
     <body>
-        <h1>PatentTools</h1>
-        <h2>Search for US Patent information.</h2><p>
+        <div id = "main-container">
+        <h1>PatentTools</h1><p>
+        <span>PatentTools allows you to quickly understand the key details of a patent.</span><p>
+        <span>Enter a patent number in the form below to get started. Currently, PatentTools supports only US Patents.</span>
+            <p>
+            
+        <span style = "width: 100%; margin: auto;"">
+                       
+       <form action = "/results" method = "POST"><br>
+            <table class = "search-table">
+                <tr>
+                    <td valign = "top" align = "right"><span>Patent number:</span></td>
+                    <td valign = "top"><input type = "text" name = "raw_pat_num"><br>
+                        <span style="font-size: small; font-style: italic;">Not sure what to search?<br>Try US 8,622,391.</span></td>
+                </tr>
+                                                                           
+                <tr>
+                    <td valign = "top" align = "right"><span>Threshold for key concept identification:</span></td>
+                    <td valign = "top"><input type = "range" min = "0" max = "50" value = "5" step = "5" name = "bigram_freq_filter"><br>
+                        <span style="font-size: small; font-style: italic;">High setting = restrict to more common concepts & fewer results.<br>
+                            Low setting = allow less common concepts & more results.<p>
+                                                                           If in doubt, start with the default value.</span></td> 
+                </tr>                
+                                                        
+                <tr>
+                    <td colspan = "2"><input type = "submit" value = "Search!">
+                </tr>
+            </table> 
+            
+        </form></span>
         
-        <form action = "/results" method = "POST">
-            <span>Patent number: <input type = "text" name = "raw_pat_num"></span><p>
-            <input type = "submit" value = " search">
-        </form>
-        
-        
+        <span style="font-size: small; font-style: italic">This page is best displayed on a tablet or larger device.<br>PatentTools is &copy; 2021, Joshua Hirner.
+        </div>
     </body>
 </html>
-        

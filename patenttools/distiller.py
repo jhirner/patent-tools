@@ -4,22 +4,31 @@
 
 # Import necessary modules
 import re
-from nltk.tokenize import word_tokenize, sent_tokenize
-from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.probability import FreqDist
+import config     # User-definable configuration
+from nltk.collocations import BigramCollocationFinder
+from nltk.metrics import BigramAssocMeasures
 
 class TextDistiller:
 
     """
-    Instances of this class are used to 'distill' a text corpus by extracting
-    a user-defined number of sentences that are most representative of the overall text.
-    Sentences are selected based on the average frequency of their constituent words
-    within the broader corpus.
+    Instances of this class are used to 'distill' a text corpus using 
+    basic NLP techniques.
     """
     
     def __init__(self, raw_fulltext):
-        self.fulltext_raw = raw_fulltext
-        self.fulltext_clean = self.clean_text(self.fulltext_raw)
-        self.word_freqs = self.get_word_freq(self.fulltext_clean)
+        self.crp_raw = raw_fulltext
+        self.crp_clean = self.clean_text(self.crp_raw)
+        stopword_list = config.tech_stopwords + config.eng_stopwords
+        
+        # When tokenizing the corpus, ignore stop words and words of
+        # length = 1, which also excludes abbreviations like "e.g."
+        # once the punctuation has been stripped.
+        self.crp_toks = [word for word in word_tokenize(self.crp_clean)
+                         if word not in stopword_list
+                         and len(word) > 1]
+        self.word_freqs = FreqDist(word for word in self.crp_toks)
     
     def clean_text(self, raw_text):
         # This function scrubs extra white spaces and non-letter characters from
@@ -30,73 +39,11 @@ class TextDistiller:
         processed_text = re.sub(r"[^a-zA-Z]", " ", processed_text) # allow only letters 
         return processed_text
 
-
-    def get_word_freq(self, cleaned_corpus):
-        # This function generates a dict showing the frequency of each non-stopword
-        # word in the corpus, normalized to the most frequent word (i.e.: max = 1).
-
-        # First, generate counts for each word.
-        word_cts = {}
-        stopword_list = stopwords.words("english")
-        for word in word_tokenize(cleaned_corpus):
-            if word not in stopword_list:
-                if word not in word_cts.keys():
-                    word_cts[word] = 1
-                else:
-                    word_cts[word] += 1
-
-        # Then use the counts to determine frequency.
-        word_freq = {}
-        for word in word_cts.keys():
-            word_freq[word] = word_cts[word] / max(word_cts.values())
-
-        return word_freq
-
-
-    def score_sentences(self, raw_text, word_freqs):
-        # This function scores each sentence based on the a dict of frequencies
-        # each of its constituent words shows up in the corpus.
-        # It returns a dict of scored sentences.
-
-        sent_scores = {}
-        sent_tokens = sent_tokenize(raw_text)
-        for sentence in sent_tokens:
-            score = 0
-            for word in word_tokenize(sentence):
-                if word.lower() in word_freqs.keys():
-                    score += word_freqs[word.lower()]
-            sent_scores[sentence] = score / len(word_tokenize(sentence))
-
-        return sent_scores
-
-
-    def pick_summary_sents(self, sent_score_dict, num_top_sentences):
-        # This function selects the num_top_sentences-most highly ranked sentences
-        # and returns them.
-
-        ranked_sent = {}
-        for sentence in sent_score_dict.keys():
-            if sent_score_dict[sentence] not in ranked_sent.keys():
-                ranked_sent[sent_score_dict[sentence]] = [sentence]
-            else:
-                ranked_sent[sent_score_dict[sentence]].append(sentence)
-
-        top_scores = sorted(list(ranked_sent.keys()), reverse = True)[:num_top_sentences]
-
-        top_sentences = [ranked_sent[score][0] for score in top_scores]
-
-        return top_sentences
-
-
-    def highlights(self, num_top_sentences):
-        # This function is the manager for Text Distiller. Call it with a
-        # the number of sentences to select for the summary.
-
-        # Clean up the corpus, calculate frequencies of each word, and use word
-        # frequencies to assign a score to each sentence.
-
-        self.scored_sents = self.score_sentences(self.fulltext_raw, self.word_freqs)
-
-        self.sel_sentences = self.pick_summary_sents(self.scored_sents, num_top_sentences)
-
-        return self.sel_sentences
+    def gen_bigrams(self, min_freq = config.bg_min_freq):
+        # Generate ranked bigrams as a list of tuples from the tokenized corpus.
+        
+        bg_finder = BigramCollocationFinder.from_words(self.crp_toks,
+                                                       window_size = config.bg_win)
+        bg_finder.apply_freq_filter(min_freq)
+        bg_ranked = bg_finder.nbest(BigramAssocMeasures.pmi, config.bg_count)
+        return bg_ranked

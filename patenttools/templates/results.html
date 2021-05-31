@@ -21,13 +21,26 @@
                 margin-bottom: 1em;
                 }
             
-            h1 {font-family: Arial, Helvetica, sans-serif;}
-            h2 {font-family: Arial, Helvetica, sans-serif;}
-            span {font-family: Arial, Helvetica, sans-serif;}
+            body {font-family: Arial, Helvetica, sans-serif;
+                background: #AAAAAA}
+            
+            #main-container {
+                background: #EEEEEE;
+                border: 5px solid black;
+                box-shadow: 10px 10px 5px #777777;
+                max-width: 600px;
+                min-width: 360px;
+                padding: 25px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                -moz-transform: translateX(-50%) translateY(-50%);
+                -webkit-transform: translateX(-50%) translateY(-50%);
+                transform: translateX(-50%) translateY(-50%);}
             
         </style>
     </head>
-    <body>
+    <body><div id = "main-container">
         <h1>PatentTools</h1>
         <h2>Results for US Patent #{{pat_num}}.</h2><p>
         <table border = 1 class="result-table">
@@ -57,18 +70,19 @@
             </tr>
             <tr>
                 <td valign = "top" class = "result-table-header">
-                    Claims
+                    Key Concepts
                 </td>
                 <td valign = "top" class = "pat_data">       
-                    {% for claim in pat_claims: %}
-                    <div class = "claims-list">
-                        {{claim}}
-                    </div>
+                    <ol>
+                    {% for bigram in pat_bigrams: %}
+                    <li>{{bigram[0]}} {{bigram[1]}}</li>
                     {% endfor %}
+                    </ol>
                 </td>
             </tr>
         </table><p>
-        <span><a href="/">Look up another patent.</a></span>
-    </body>
+        <span><a href="/">Look up another patent.</a></span><p>
+        <span style="font-size: small; font-style: italic">This page is best displayed on a tablet or larger device.<br>PatentTools is &copy; 2021, Joshua Hirner.
+    </div></body>
 </html>
         

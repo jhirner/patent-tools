@@ -71,14 +71,14 @@ class USPTOLookup:
             self.assignee = self.clean_text(soup.find(string = re.compile("Assignee:")).find_next().text).strip()
             self.abstract = self.clean_text(soup.find(string = re.compile("Abstract")).find_next().text).strip()
 
-            # Extract the claims section by getting everything after "What is
-            # claimed is", then removing everything at or after "Description"
-            claims_in_prog = soup.find(string = re.compile("What is claimed is")).find_all_next(string = True)
+            # Extract the claims section by getting everything after the bolded
+            # Claims header, then removing everything at or after "Description"
+            claims_in_prog = soup.find("b", string = re.compile("Claims")).find_all_next(string = True)
             claims_in_prog = list(claims_in_prog)[:list(claims_in_prog).index("Description") - 1]
             self.claims = [self.clean_text(claim).strip() for claim in claims_in_prog]
 
             # Extract the description section in a similar fashion.
-            desc_in_prog = soup.find(string = re.compile("Description")).find_all_next(string = True)
+            desc_in_prog = soup.find("b", string = re.compile("Description")).find_all_next(string = True)
             desc_in_prog = [re.sub("\n", " ", desc) for desc in desc_in_prog]
             desc_in_prog = "\n\n".join(desc_in_prog)
             self.description = re.sub(r"\*", "", desc_in_prog).strip()
@@ -94,7 +94,7 @@ class USPTOLookup:
         
         cleaned_num = re.sub(r"US", "", raw_patent_num)
         cleaned_num = re.sub(r"[a-zA-Z]+[0-9]*", "", cleaned_num)
-        cleaned_num = re.sub(r"[,.\\\!\?-]*", "", cleaned_num)
+        cleaned_num = re.sub(r"[,.\\\!\?\#-]*", "", cleaned_num)
         cleaned_num = re.sub(r"\s+", "", cleaned_num)
         
         # Test to confirm that the user's patent number could be interpreted.
