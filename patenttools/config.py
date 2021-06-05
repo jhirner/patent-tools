@@ -3,8 +3,7 @@
 
 # Define stop words to be ignored in word frequency counts and related
 # analyses.
-tech_stopwords = ["method",
-                  "comprising", 
+tech_stopwords = ["comprising", 
                   "fig", 
                   "figure", 
                   "ex", 
@@ -28,7 +27,12 @@ tech_stopwords = ["method",
                   "et",
                   "al",
                   "etc",
-                  "ex",]
+                  "ex",
+                  "embodiment",
+                  "embodiments",
+                  "prior",
+                  "art",
+                  "one",]
 
 eng_stopwords = ['i',
                  'me',
