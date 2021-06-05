@@ -1,5 +1,8 @@
-# set base image (host OS)
-FROM python:3.9-slim-buster
+# Python for amd64
+# FROM python:3.9-slim-buster
+
+# Python for ARM
+FROM leberkaas/python-armed
 
 # set the working directory in the container
 WORKDIR /source
