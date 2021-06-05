@@ -58,7 +58,9 @@ def display_results():
                 return conn_err1 + conn_err_2
             
             except:
-                pass
+                error = """An error occured.<p>
+                    Please <a href = '/'>enter a new query</a>."""
+                return error 
 
         else:
             error = """No query entered.<p>
