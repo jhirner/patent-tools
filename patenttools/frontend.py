@@ -40,7 +40,7 @@ def display_results():
                 
                 # Instantiate a TextDistiller to extract bigrams
                 pat_distiller = TextDistiller(" ".join(patent_info.claims) + patent_info.description)
-                bigrams = pat_distiller.gen_bigrams(min_freq = bigram_freq_filter)
+                bigrams = pat_distiller.gen_bigrams(min_freq = bigram_freq_filter)   
                 
                 
                 display = render_template("results.html",
@@ -49,7 +49,8 @@ def display_results():
                               pat_url = patent_info.url,
                               pat_assignee = patent_info.assignee,
                               pat_file_date = patent_info.filing_date,
-                              pat_bigrams = bigrams)
+                              pat_bigrams = bigrams,
+                              wordcloud = pat_distiller.wordcloud)
                 return display
             
             except ConnectionError:
