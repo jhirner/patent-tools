@@ -5,6 +5,7 @@
 import re
 import requests
 from bs4 import BeautifulSoup
+from classifiers import cpc_codes
 
 
 class USPTOLookup:
@@ -68,8 +69,20 @@ class USPTOLookup:
             self.title = self.clean_text(soup.find("font", size = "+1").text)
 
             self.filing_date = self.clean_text(soup.find(string = re.compile("Filed:")).find_next().text).strip()
-            self.assignee = self.clean_text(soup.find(string = re.compile("Assignee:")).find_next().text).strip()
+            
+            # Assignees are not always present.
+            try:
+                self.assignee = self.clean_text(soup.find(string = re.compile("Assignee:")).find_next().text).strip()
+            except AttributeError:
+                pass
+            
             self.abstract = self.clean_text(soup.find(string = re.compile("Abstract")).find_next().text).strip()
+            self.primary_cpc = self.clean_text(soup.find(string = re.compile("Current CPC Class:")).find_next().text).split(" ")[0].strip()
+            
+            try: 
+                self.primary_class = cpc_codes[self.primary_cpc].lower()
+            except KeyError:
+                self.primary_class = "(not identified)"
 
             # Extract the claims section by getting everything after the bolded
             # Claims header, then removing everything at or after "Description"

@@ -47,6 +47,7 @@ def display_results():
                               pat_num = patent_info.number,
                               pat_title = patent_info.title,
                               pat_url = patent_info.url,
+                              pat_class = patent_info.primary_class,
                               pat_assignee = patent_info.assignee,
                               pat_file_date = patent_info.filing_date,
                               pat_bigrams = bigrams,
