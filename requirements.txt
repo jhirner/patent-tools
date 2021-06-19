@@ -3,3 +3,4 @@ flask ~= 1.1.2
 gunicorn ~= 20.1.0
 nltk ~= 3.5
 requests ~= 2.22
+wordcloud ~= 1.8.1
