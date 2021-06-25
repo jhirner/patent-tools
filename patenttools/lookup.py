@@ -74,7 +74,7 @@ class USPTOLookup:
             try:
                 self.assignee = self.clean_text(soup.find(string = re.compile("Assignee:")).find_next().text).strip()
             except AttributeError:
-                pass
+                self.assignee = "Undetermined"
             
             self.abstract = self.clean_text(soup.find(string = re.compile("Abstract")).find_next().text).strip()
             self.primary_cpc = self.clean_text(soup.find(string = re.compile("Current CPC Class:")).find_next().text).split(" ")[0].strip()
@@ -84,6 +84,21 @@ class USPTOLookup:
             except KeyError:
                 self.primary_class = "(not identified)"
 
+            # Cited _US_ patents are listed in a table under the header References cited.
+            # The table has no header row.
+            try:
+                self.cited_us = len(soup.find(string = re.compile("References Cited")).find_next(string = "U.S. Patent Documents").find_next("table").find_all("tr"))
+            except AttributeError:
+                self.cited_us = 0
+                                    
+            # Cited _foreign_ patents are listed in a table under the header References cited.
+            # The table has no header row.
+            try:
+                self.cited_for = len(soup.find(string = re.compile("References Cited")).find_next(string = "Foreign Patent Documents").find_next("table").find_all("tr"))
+            except AttributeError:
+                self.cited_for = 0
+                
+                
             # Extract the claims section by getting everything after the bolded
             # Claims header, then removing everything at or after "Description"
             claims_in_prog = soup.find("b", string = re.compile("Claims")).find_all_next(string = True)

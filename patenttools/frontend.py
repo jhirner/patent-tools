@@ -50,6 +50,8 @@ def display_results():
                               pat_class = patent_info.primary_class,
                               pat_assignee = patent_info.assignee,
                               pat_file_date = patent_info.filing_date,
+                              citations_us = patent_info.cited_us,
+                              citations_for = patent_info.cited_for,            
                               pat_bigrams = bigrams,
                               wordcloud = pat_distiller.wordcloud)
                 return display
