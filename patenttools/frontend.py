@@ -63,7 +63,8 @@ def display_results():
             
             except:
                 error = """An error occured.<p>
-                    Please <a href = '/'>enter a new query</a>."""
+                    Please <a href = '/'>enter a new query</a><br>
+                    <a href = "https://forms.gle/nZT9JLJbA9akGpeE8" target = "_blank">or share feedback about the problem.</a>"""
                 return error 
 
         else:
